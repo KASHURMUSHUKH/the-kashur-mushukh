@@ -1,178 +1,194 @@
-```javascript id="x9kq2m"
 /* =========================================================
    THE KASHUR MUSHUKH
-   Premium Website Interactions
-   ========================================================= */
+   Website Functionality
+========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
 
-  /* =======================================================
+  /* -------------------------------------------------------
      BUSINESS DETAILS
-     ======================================================= */
+  ------------------------------------------------------- */
 
   const WHATSAPP_NUMBER = "917889420904";
 
-  /*
-     Add the actual Kashur Mushukh Instagram URL later.
+  const PRODUCT_NAME =
+    "The Kashur Mushukh - 50 ML";
 
-     Example:
-     const INSTAGRAM_URL =
-       "https://www.instagram.com/yourusername/";
-  */
-
-  const INSTAGRAM_URL = "https://www.instagram.com/";
+  const PRODUCT_PRICE =
+    "1499";
 
 
-  /* =======================================================
-     ELEMENTS
-     ======================================================= */
+  /* -------------------------------------------------------
+     CURRENT YEAR
+  ------------------------------------------------------- */
 
-  const header = document.querySelector(".site-header");
-  const menuToggle = document.querySelector(".menu-toggle");
-  const navigation = document.querySelector(".navigation");
+  const year =
+    document.getElementById("year");
 
-  const prefersReducedMotion =
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (year) {
+    year.textContent =
+      new Date().getFullYear();
+  }
 
 
-  /* =======================================================
-     MOBILE NAVIGATION
-     ======================================================= */
+  /* -------------------------------------------------------
+     MOBILE MENU
+  ------------------------------------------------------- */
+
+  const menuToggle =
+    document.querySelector(".menu-toggle");
+
+  const navigation =
+    document.querySelector(".navigation");
 
   if (menuToggle && navigation) {
 
-    const menuSpans =
-      menuToggle.querySelectorAll("span");
+    menuToggle.addEventListener("click", function () {
 
-    const setMenuState = (isOpen) => {
+      navigation.classList.toggle("active");
 
-      navigation.classList.toggle("active", isOpen);
-
-      menuToggle.setAttribute(
-        "aria-expanded",
-        String(isOpen)
-      );
+      const opened =
+        navigation.classList.contains("active");
 
       menuToggle.setAttribute(
         "aria-label",
-        isOpen
+        opened
           ? "Close navigation"
           : "Open navigation"
       );
 
-      /*
-         Animate hamburger into an elegant X.
-      */
+    });
 
-      if (menuSpans.length === 3) {
-
-        menuSpans[0].style.transform =
-          isOpen
-            ? "translateY(6px) rotate(45deg)"
-            : "none";
-
-        menuSpans[1].style.opacity =
-          isOpen ? "0" : "1";
-
-        menuSpans[2].style.transform =
-          isOpen
-            ? "translateY(-6px) rotate(-45deg)"
-            : "none";
-      }
-
-      /*
-         Prevent background scrolling while
-         mobile navigation is open.
-      */
-
-      document.body.style.overflow =
-        isOpen ? "hidden" : "";
-    };
-
-
-    menuToggle.setAttribute(
-      "aria-expanded",
-      "false"
-    );
-
-
-    menuToggle.addEventListener(
-      "click",
-      () => {
-
-        const isOpen =
-          navigation.classList.contains("active");
-
-        setMenuState(!isOpen);
-
-      }
-    );
-
-
-    /*
-       Close menu after selecting a section.
-    */
 
     navigation
       .querySelectorAll("a")
-      .forEach((link) => {
+      .forEach(function (link) {
 
         link.addEventListener(
           "click",
-          () => {
+          function () {
 
-            setMenuState(false);
+            navigation.classList.remove("active");
+
+            menuToggle.setAttribute(
+              "aria-label",
+              "Open navigation"
+            );
 
           }
         );
 
       });
 
+  }
 
-    /*
-       Close menu when clicking outside it.
-    */
 
-    document.addEventListener(
+  /* -------------------------------------------------------
+     HEADER ON SCROLL
+  ------------------------------------------------------- */
+
+  const header =
+    document.querySelector(".site-header");
+
+  function updateHeader() {
+
+    if (!header) return;
+
+    if (window.scrollY > 40) {
+
+      header.style.background =
+        "rgba(16,16,14,.94)";
+
+      header.style.backdropFilter =
+        "blur(14px)";
+
+    } else {
+
+      header.style.background =
+        "transparent";
+
+      header.style.backdropFilter =
+        "none";
+
+    }
+
+  }
+
+  window.addEventListener(
+    "scroll",
+    updateHeader,
+    { passive: true }
+  );
+
+  updateHeader();
+
+
+  /* -------------------------------------------------------
+     ORDER MODAL
+  ------------------------------------------------------- */
+
+  const modal =
+    document.getElementById("orderModal");
+
+  const buyButtons =
+    document.querySelectorAll(".buy-button");
+
+  const closeButton =
+    document.querySelector(".modal-close");
+
+  const codButton =
+    document.getElementById("codButton");
+
+  const upiButton =
+    document.getElementById("upiButton");
+
+
+  function openModal() {
+
+    if (modal) {
+      modal.classList.add("active");
+    }
+
+  }
+
+
+  function closeModal() {
+
+    if (modal) {
+      modal.classList.remove("active");
+    }
+
+  }
+
+
+  buyButtons.forEach(function (button) {
+
+    button.addEventListener(
       "click",
-      (event) => {
-
-        const clickedInsideNavigation =
-          navigation.contains(event.target);
-
-        const clickedMenuButton =
-          menuToggle.contains(event.target);
-
-        if (
-          navigation.classList.contains("active") &&
-          !clickedInsideNavigation &&
-          !clickedMenuButton
-        ) {
-
-          setMenuState(false);
-
-        }
-
-      }
+      openModal
     );
 
+  });
 
-    /*
-       Close menu with Escape.
-    */
 
-    document.addEventListener(
-      "keydown",
-      (event) => {
+  if (closeButton) {
 
-        if (
-          event.key === "Escape" &&
-          navigation.classList.contains("active")
-        ) {
+    closeButton.addEventListener(
+      "click",
+      closeModal
+    );
 
-          setMenuState(false);
-          menuToggle.focus();
+  }
 
+
+  if (modal) {
+
+    modal.addEventListener(
+      "click",
+      function (event) {
+
+        if (event.target === modal) {
+          closeModal();
         }
 
       }
@@ -181,29 +197,172 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  /* =======================================================
-     WHATSAPP ORDER
-     ======================================================= */
+  /* -------------------------------------------------------
+     MODAL → ORDER FORM
+  ------------------------------------------------------- */
 
-  const productButtons =
-    document.querySelectorAll(".product-button");
+  function goToOrder(paymentMethod) {
 
-  productButtons.forEach((button) => {
+    closeModal();
 
-    button.addEventListener(
+    const orderSection =
+      document.getElementById("order");
+
+    if (orderSection) {
+
+      orderSection.scrollIntoView({
+        behavior: "smooth"
+      });
+
+    }
+
+    const paymentRadio =
+      document.querySelector(
+        'input[name="payment"][value="' +
+        paymentMethod +
+        '"]'
+      );
+
+    if (paymentRadio) {
+
+      setTimeout(function () {
+
+        paymentRadio.checked = true;
+
+      }, 500);
+
+    }
+
+  }
+
+
+  if (codButton) {
+
+    codButton.addEventListener(
       "click",
-      (event) => {
+      function () {
+
+        goToOrder("COD");
+
+      }
+    );
+
+  }
+
+
+  if (upiButton) {
+
+    upiButton.addEventListener(
+      "click",
+      function () {
+
+        goToOrder("UPI");
+
+      }
+    );
+
+  }
+
+
+  /* -------------------------------------------------------
+     ORDER FORM
+  ------------------------------------------------------- */
+
+  const orderForm =
+    document.getElementById("orderForm");
+
+
+  if (orderForm) {
+
+    orderForm.addEventListener(
+      "submit",
+      function (event) {
 
         event.preventDefault();
 
+
+        const name =
+          document
+            .getElementById("customerName")
+            .value
+            .trim();
+
+
+        const phone =
+          document
+            .getElementById("customerPhone")
+            .value
+            .trim();
+
+
+        const address =
+          document
+            .getElementById("customerAddress")
+            .value
+            .trim();
+
+
+        const city =
+          document
+            .getElementById("customerCity")
+            .value
+            .trim();
+
+
+        const pincode =
+          document
+            .getElementById("customerPincode")
+            .value
+            .trim();
+
+
+        const payment =
+          document
+            .querySelector(
+              'input[name="payment"]:checked'
+            )
+            .value;
+
+
+        if (!name ||
+            !phone ||
+            !address ||
+            !city ||
+            !pincode) {
+
+          alert(
+            "Please fill all the required details."
+          );
+
+          return;
+
+        }
+
+
         const message =
-          "Hello, I am interested in The Kashur Mushukh fragrance. Please share the price and ordering details.";
+`Hello, I want to place an order for ${PRODUCT_NAME}.
+
+Name: ${name}
+Mobile: ${phone}
+
+Address:
+${address}
+${city} - ${pincode}
+
+Payment Method: ${payment}
+
+Product: ${PRODUCT_NAME}
+Price: ₹${PRODUCT_PRICE}
+
+Please confirm my order and share the next steps.`;
+
 
         const whatsappURL =
           "https://wa.me/" +
           WHATSAPP_NUMBER +
           "?text=" +
           encodeURIComponent(message);
+
 
         window.open(
           whatsappURL,
@@ -214,374 +373,150 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     );
 
-  });
-
-
-  /* =======================================================
-     INSTAGRAM
-     ======================================================= */
-
-  const instagramLinks =
-    document.querySelectorAll(
-      'a[href="https://www.instagram.com/"]'
-    );
-
-  instagramLinks.forEach((link) => {
-
-    link.href = INSTAGRAM_URL;
-
-  });
-
-
-  /* =======================================================
-     CURRENT YEAR
-     ======================================================= */
-
-  const yearElement =
-    document.getElementById("year");
-
-  if (yearElement) {
-
-    yearElement.textContent =
-      new Date().getFullYear();
-
   }
 
 
-  /* =======================================================
-     HEADER ON SCROLL
-     ======================================================= */
-
-  let ticking = false;
-
-  const updateHeader = () => {
-
-    if (!header) {
-      return;
-    }
-
-    const scrolled =
-      window.scrollY > 45;
-
-    if (scrolled) {
-
-      header.style.background =
-        "rgba(9, 9, 8, 0.94)";
-
-      header.style.backdropFilter =
-        "blur(16px)";
-
-      header.style.webkitBackdropFilter =
-        "blur(16px)";
-
-      header.style.borderBottomColor =
-        "rgba(185, 154, 99, 0.18)";
-
-      header.style.boxShadow =
-        "0 10px 35px rgba(0, 0, 0, 0.12)";
-
-    } else {
-
-      header.style.background =
-        "transparent";
-
-      header.style.backdropFilter =
-        "none";
-
-      header.style.webkitBackdropFilter =
-        "none";
-
-      header.style.borderBottomColor =
-        "rgba(255, 255, 255, 0.12)";
-
-      header.style.boxShadow =
-        "none";
-
-    }
-
-    ticking = false;
-
-  };
-
-
-  window.addEventListener(
-    "scroll",
-    () => {
-
-      if (!ticking) {
-
-        window.requestAnimationFrame(
-          updateHeader
-        );
-
-        ticking = true;
-
-      }
-
-    },
-    { passive: true }
-  );
-
-
-  updateHeader();
-
-
-  /* =======================================================
+  /* -------------------------------------------------------
      SMOOTH ANCHOR NAVIGATION
-     ======================================================= */
+  ------------------------------------------------------- */
 
-  const anchorLinks =
-    document.querySelectorAll(
-      'a[href^="#"]'
-    );
+  document
+    .querySelectorAll('a[href^="#"]')
+    .forEach(function (link) {
 
-  anchorLinks.forEach((link) => {
+      link.addEventListener(
+        "click",
+        function (event) {
 
-    link.addEventListener(
-      "click",
-      (event) => {
+          const id =
+            link.getAttribute("href");
 
-        const targetID =
-          link.getAttribute("href");
+          if (!id || id === "#") {
+            return;
+          }
 
-        if (
-          !targetID ||
-          targetID === "#" ||
-          link.classList.contains("product-button")
-        ) {
-          return;
-        }
+          const target =
+            document.querySelector(id);
 
-        const target =
-          document.querySelector(targetID);
+          if (!target) {
+            return;
+          }
 
-        if (!target) {
-          return;
-        }
+          event.preventDefault();
 
-        event.preventDefault();
-
-        target.scrollIntoView({
-          behavior:
-            prefersReducedMotion
-              ? "auto"
-              : "smooth",
-          block: "start"
-        });
-
-      }
-    );
-
-  });
-
-
-  /* =======================================================
-     ACTIVE NAVIGATION LINK
-     ======================================================= */
-
-  const sections =
-    document.querySelectorAll(
-      "main section[id]"
-    );
-
-  const navLinks =
-    document.querySelectorAll(
-      ".navigation a"
-    );
-
-  if (
-    sections.length &&
-    navLinks.length &&
-    "IntersectionObserver" in window
-  ) {
-
-    const sectionObserver =
-      new IntersectionObserver(
-        (entries) => {
-
-          entries.forEach((entry) => {
-
-            if (!entry.isIntersecting) {
-              return;
-            }
-
-            const currentID =
-              entry.target.getAttribute("id");
-
-            navLinks.forEach((link) => {
-
-              const matches =
-                link.getAttribute("href") ===
-                "#" + currentID;
-
-              link.classList.toggle(
-                "active",
-                matches
-              );
-
-            });
-
+          target.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
           });
 
-        },
-        {
-          rootMargin:
-            "-35% 0px -55% 0px",
-          threshold: 0
         }
       );
 
-
-    sections.forEach((section) => {
-
-      sectionObserver.observe(section);
-
     });
 
-  }
 
-
-  /* =======================================================
-     SCROLL REVEAL
-     ======================================================= */
+  /* -------------------------------------------------------
+     REVEAL ANIMATION
+  ------------------------------------------------------- */
 
   const revealElements =
     document.querySelectorAll(
-      [
-        ".intro-heading",
-        ".intro-text",
-        ".story-image",
-        ".story-content",
-        ".note-card",
-        ".product-card",
-        ".contact-container"
-      ].join(", ")
+      ".intro-grid, .story-grid, .note, .product-card, .why-card, .order-container, .delivery-grid, .faq-list, .contact-inner"
     );
 
 
-  /*
-     If the browser does not support IntersectionObserver,
-     show everything immediately.
-  */
+  revealElements.forEach(function (element) {
 
-  if (
-    prefersReducedMotion ||
-    !("IntersectionObserver" in window)
-  ) {
+    element.style.opacity = "0";
 
-    revealElements.forEach((element) => {
+    element.style.transform =
+      "translateY(25px)";
 
-      element.style.opacity = "1";
-      element.style.transform = "none";
-
-    });
-
-  } else {
-
-    revealElements.forEach((element, index) => {
-
-      element.style.opacity = "0";
-
-      element.style.transform =
-        "translateY(28px)";
-
-      element.style.transition =
-        "opacity 0.85s ease, transform 0.85s cubic-bezier(0.22, 1, 0.36, 1)";
-
-      /*
-         Small stagger effect.
-      */
-
-      if (
-        element.classList.contains("note-card")
-      ) {
-
-        const cardIndex =
-          Array.from(
-            element.parentElement.children
-          ).indexOf(element);
-
-        element.style.transitionDelay =
-          `${cardIndex * 0.12}s`;
-
-      } else {
-
-        element.style.transitionDelay =
-          `${Math.min(index * 0.03, 0.18)}s`;
-
-      }
-
-    });
-
-
-    const revealObserver =
-      new IntersectionObserver(
-        (entries, observer) => {
-
-          entries.forEach((entry) => {
-
-            if (!entry.isIntersecting) {
-              return;
-            }
-
-            entry.target.style.opacity =
-              "1";
-
-            entry.target.style.transform =
-              "translateY(0)";
-
-            observer.unobserve(
-              entry.target
-            );
-
-          });
-
-        },
-        {
-          threshold: 0.12,
-          rootMargin: "0px 0px -40px 0px"
-        }
-      );
-
-
-    revealElements.forEach((element) => {
-
-      revealObserver.observe(element);
-
-    });
-
-  }
-
-
-  /* =======================================================
-     IMAGE LOADING POLISH
-     ======================================================= */
-
-  const images =
-    document.querySelectorAll("img");
-
-  images.forEach((image) => {
-
-    image.addEventListener(
-      "load",
-      () => {
-
-        image.classList.add("loaded");
-
-      },
-      { once: true }
-    );
+    element.style.transition =
+      "opacity .8s ease, transform .8s ease";
 
   });
 
 
-  /* =======================================================
-     CONSOLE BRAND MESSAGE
-     ======================================================= */
+  if ("IntersectionObserver" in window) {
+
+    const observer =
+      new IntersectionObserver(
+        function (entries, observer) {
+
+          entries.forEach(
+            function (entry) {
+
+              if (!entry.isIntersecting) {
+                return;
+              }
+
+              entry.target.style.opacity =
+                "1";
+
+              entry.target.style.transform =
+                "translateY(0)";
+
+              observer.unobserve(
+                entry.target
+              );
+
+            }
+          );
+
+        },
+        {
+          threshold: 0.08
+        }
+      );
+
+
+    revealElements.forEach(
+      function (element) {
+
+        observer.observe(element);
+
+      }
+    );
+
+  } else {
+
+    revealElements.forEach(
+      function (element) {
+
+        element.style.opacity = "1";
+
+        element.style.transform =
+          "translateY(0)";
+
+      }
+    );
+
+  }
+
+
+  /* -------------------------------------------------------
+     ESCAPE KEY CLOSES MODAL
+  ------------------------------------------------------- */
+
+  document.addEventListener(
+    "keydown",
+    function (event) {
+
+      if (event.key === "Escape") {
+        closeModal();
+      }
+
+    }
+  );
+
+
+  /* -------------------------------------------------------
+     BRAND CONSOLE
+  ------------------------------------------------------- */
 
   console.log(
     "The Kashur Mushukh — A Fragrance from Kashmir."
   );
 
 });
-```
