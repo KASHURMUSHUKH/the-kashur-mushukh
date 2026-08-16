@@ -1,87 +1,198 @@
-```javascript
+```javascript id="x9kq2m"
 /* =========================================================
    THE KASHUR MUSHUKH
-   Website Interactions
+   Premium Website Interactions
    ========================================================= */
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
 
-  /* ---------------------------------------------------------
+  /* =======================================================
      BUSINESS DETAILS
-     --------------------------------------------------------- */
+     ======================================================= */
 
   const WHATSAPP_NUMBER = "917889420904";
 
   /*
-     Replace this with the actual Instagram profile later.
+     Add the actual Kashur Mushukh Instagram URL later.
 
      Example:
-     const INSTAGRAM_URL = "https://www.instagram.com/yourusername/";
+     const INSTAGRAM_URL =
+       "https://www.instagram.com/yourusername/";
   */
 
   const INSTAGRAM_URL = "https://www.instagram.com/";
 
 
-  /* ---------------------------------------------------------
-     MOBILE MENU
-     --------------------------------------------------------- */
+  /* =======================================================
+     ELEMENTS
+     ======================================================= */
 
+  const header = document.querySelector(".site-header");
   const menuToggle = document.querySelector(".menu-toggle");
   const navigation = document.querySelector(".navigation");
 
+  const prefersReducedMotion =
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+
+  /* =======================================================
+     MOBILE NAVIGATION
+     ======================================================= */
+
   if (menuToggle && navigation) {
 
-    menuToggle.addEventListener("click", function () {
+    const menuSpans =
+      menuToggle.querySelectorAll("span");
 
-      navigation.classList.toggle("active");
+    const setMenuState = (isOpen) => {
 
-      const isOpen = navigation.classList.contains("active");
+      navigation.classList.toggle("active", isOpen);
+
+      menuToggle.setAttribute(
+        "aria-expanded",
+        String(isOpen)
+      );
 
       menuToggle.setAttribute(
         "aria-label",
-        isOpen ? "Close navigation" : "Open navigation"
+        isOpen
+          ? "Close navigation"
+          : "Open navigation"
       );
 
-    });
+      /*
+         Animate hamburger into an elegant X.
+      */
+
+      if (menuSpans.length === 3) {
+
+        menuSpans[0].style.transform =
+          isOpen
+            ? "translateY(6px) rotate(45deg)"
+            : "none";
+
+        menuSpans[1].style.opacity =
+          isOpen ? "0" : "1";
+
+        menuSpans[2].style.transform =
+          isOpen
+            ? "translateY(-6px) rotate(-45deg)"
+            : "none";
+      }
+
+      /*
+         Prevent background scrolling while
+         mobile navigation is open.
+      */
+
+      document.body.style.overflow =
+        isOpen ? "hidden" : "";
+    };
 
 
-    /* Close menu after clicking a navigation link */
+    menuToggle.setAttribute(
+      "aria-expanded",
+      "false"
+    );
 
-    const navigationLinks =
-      navigation.querySelectorAll("a");
 
-    navigationLinks.forEach(function (link) {
+    menuToggle.addEventListener(
+      "click",
+      () => {
 
-      link.addEventListener("click", function () {
+        const isOpen =
+          navigation.classList.contains("active");
 
-        navigation.classList.remove("active");
+        setMenuState(!isOpen);
 
-        menuToggle.setAttribute(
-          "aria-label",
-          "Open navigation"
+      }
+    );
+
+
+    /*
+       Close menu after selecting a section.
+    */
+
+    navigation
+      .querySelectorAll("a")
+      .forEach((link) => {
+
+        link.addEventListener(
+          "click",
+          () => {
+
+            setMenuState(false);
+
+          }
         );
 
       });
 
-    });
+
+    /*
+       Close menu when clicking outside it.
+    */
+
+    document.addEventListener(
+      "click",
+      (event) => {
+
+        const clickedInsideNavigation =
+          navigation.contains(event.target);
+
+        const clickedMenuButton =
+          menuToggle.contains(event.target);
+
+        if (
+          navigation.classList.contains("active") &&
+          !clickedInsideNavigation &&
+          !clickedMenuButton
+        ) {
+
+          setMenuState(false);
+
+        }
+
+      }
+    );
+
+
+    /*
+       Close menu with Escape.
+    */
+
+    document.addEventListener(
+      "keydown",
+      (event) => {
+
+        if (
+          event.key === "Escape" &&
+          navigation.classList.contains("active")
+        ) {
+
+          setMenuState(false);
+          menuToggle.focus();
+
+        }
+
+      }
+    );
 
   }
 
 
-  /* ---------------------------------------------------------
-     WHATSAPP ORDER BUTTONS
-     --------------------------------------------------------- */
+  /* =======================================================
+     WHATSAPP ORDER
+     ======================================================= */
 
-  const whatsappLinks =
-    document.querySelectorAll('a[href="#contact"]');
+  const productButtons =
+    document.querySelectorAll(".product-button");
 
-  whatsappLinks.forEach(function (link) {
+  productButtons.forEach((button) => {
 
-    if (
-      link.classList.contains("product-button")
-    ) {
-
-      link.addEventListener("click", function (event) {
+    button.addEventListener(
+      "click",
+      (event) => {
 
         event.preventDefault();
 
@@ -100,32 +211,31 @@ document.addEventListener("DOMContentLoaded", function () {
           "noopener,noreferrer"
         );
 
-      });
-
-    }
+      }
+    );
 
   });
 
 
-  /* ---------------------------------------------------------
+  /* =======================================================
      INSTAGRAM
-     --------------------------------------------------------- */
+     ======================================================= */
 
   const instagramLinks =
     document.querySelectorAll(
       'a[href="https://www.instagram.com/"]'
     );
 
-  instagramLinks.forEach(function (link) {
+  instagramLinks.forEach((link) => {
 
     link.href = INSTAGRAM_URL;
 
   });
 
 
-  /* ---------------------------------------------------------
+  /* =======================================================
      CURRENT YEAR
-     --------------------------------------------------------- */
+     ======================================================= */
 
   const yearElement =
     document.getElementById("year");
@@ -138,26 +248,37 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
 
-  /* ---------------------------------------------------------
-     HEADER BACKGROUND ON SCROLL
-     --------------------------------------------------------- */
+  /* =======================================================
+     HEADER ON SCROLL
+     ======================================================= */
 
-  const header =
-    document.querySelector(".site-header");
+  let ticking = false;
 
-  function updateHeader() {
+  const updateHeader = () => {
 
     if (!header) {
       return;
     }
 
-    if (window.scrollY > 40) {
+    const scrolled =
+      window.scrollY > 45;
+
+    if (scrolled) {
 
       header.style.background =
-        "rgba(12, 12, 11, 0.96)";
+        "rgba(9, 9, 8, 0.94)";
 
       header.style.backdropFilter =
-        "blur(12px)";
+        "blur(16px)";
+
+      header.style.webkitBackdropFilter =
+        "blur(16px)";
+
+      header.style.borderBottomColor =
+        "rgba(185, 154, 99, 0.18)";
+
+      header.style.boxShadow =
+        "0 10px 35px rgba(0, 0, 0, 0.12)";
 
     } else {
 
@@ -167,121 +288,296 @@ document.addEventListener("DOMContentLoaded", function () {
       header.style.backdropFilter =
         "none";
 
+      header.style.webkitBackdropFilter =
+        "none";
+
+      header.style.borderBottomColor =
+        "rgba(255, 255, 255, 0.12)";
+
+      header.style.boxShadow =
+        "none";
+
     }
 
-  }
+    ticking = false;
+
+  };
+
 
   window.addEventListener(
     "scroll",
-    updateHeader,
+    () => {
+
+      if (!ticking) {
+
+        window.requestAnimationFrame(
+          updateHeader
+        );
+
+        ticking = true;
+
+      }
+
+    },
     { passive: true }
   );
+
 
   updateHeader();
 
 
-  /* ---------------------------------------------------------
-     SMOOTH SECTION NAVIGATION
-     --------------------------------------------------------- */
+  /* =======================================================
+     SMOOTH ANCHOR NAVIGATION
+     ======================================================= */
 
   const anchorLinks =
     document.querySelectorAll(
       'a[href^="#"]'
     );
 
-  anchorLinks.forEach(function (link) {
+  anchorLinks.forEach((link) => {
 
-    link.addEventListener("click", function (event) {
+    link.addEventListener(
+      "click",
+      (event) => {
 
-      const targetID =
-        link.getAttribute("href");
+        const targetID =
+          link.getAttribute("href");
 
-      if (
-        !targetID ||
-        targetID === "#" ||
-        link.classList.contains("product-button")
-      ) {
-        return;
+        if (
+          !targetID ||
+          targetID === "#" ||
+          link.classList.contains("product-button")
+        ) {
+          return;
+        }
+
+        const target =
+          document.querySelector(targetID);
+
+        if (!target) {
+          return;
+        }
+
+        event.preventDefault();
+
+        target.scrollIntoView({
+          behavior:
+            prefersReducedMotion
+              ? "auto"
+              : "smooth",
+          block: "start"
+        });
+
       }
+    );
 
-      const target =
-        document.querySelector(targetID);
+  });
 
-      if (!target) {
-        return;
-      }
 
-      event.preventDefault();
+  /* =======================================================
+     ACTIVE NAVIGATION LINK
+     ======================================================= */
 
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
+  const sections =
+    document.querySelectorAll(
+      "main section[id]"
+    );
+
+  const navLinks =
+    document.querySelectorAll(
+      ".navigation a"
+    );
+
+  if (
+    sections.length &&
+    navLinks.length &&
+    "IntersectionObserver" in window
+  ) {
+
+    const sectionObserver =
+      new IntersectionObserver(
+        (entries) => {
+
+          entries.forEach((entry) => {
+
+            if (!entry.isIntersecting) {
+              return;
+            }
+
+            const currentID =
+              entry.target.getAttribute("id");
+
+            navLinks.forEach((link) => {
+
+              const matches =
+                link.getAttribute("href") ===
+                "#" + currentID;
+
+              link.classList.toggle(
+                "active",
+                matches
+              );
+
+            });
+
+          });
+
+        },
+        {
+          rootMargin:
+            "-35% 0px -55% 0px",
+          threshold: 0
+        }
+      );
+
+
+    sections.forEach((section) => {
+
+      sectionObserver.observe(section);
 
     });
 
-  });
+  }
 
 
-  /* ---------------------------------------------------------
-     SIMPLE REVEAL ANIMATION
-     --------------------------------------------------------- */
+  /* =======================================================
+     SCROLL REVEAL
+     ======================================================= */
 
   const revealElements =
     document.querySelectorAll(
-      ".intro-heading, .intro-text, .story-image, .story-content, .note-card, .product-card, .contact-container"
+      [
+        ".intro-heading",
+        ".intro-text",
+        ".story-image",
+        ".story-content",
+        ".note-card",
+        ".product-card",
+        ".contact-container"
+      ].join(", ")
     );
 
 
-  revealElements.forEach(function (element) {
+  /*
+     If the browser does not support IntersectionObserver,
+     show everything immediately.
+  */
 
-    element.style.opacity = "0";
+  if (
+    prefersReducedMotion ||
+    !("IntersectionObserver" in window)
+  ) {
 
-    element.style.transform =
-      "translateY(25px)";
+    revealElements.forEach((element) => {
 
-    element.style.transition =
-      "opacity 0.8s ease, transform 0.8s ease";
+      element.style.opacity = "1";
+      element.style.transform = "none";
 
-  });
+    });
+
+  } else {
+
+    revealElements.forEach((element, index) => {
+
+      element.style.opacity = "0";
+
+      element.style.transform =
+        "translateY(28px)";
+
+      element.style.transition =
+        "opacity 0.85s ease, transform 0.85s cubic-bezier(0.22, 1, 0.36, 1)";
+
+      /*
+         Small stagger effect.
+      */
+
+      if (
+        element.classList.contains("note-card")
+      ) {
+
+        const cardIndex =
+          Array.from(
+            element.parentElement.children
+          ).indexOf(element);
+
+        element.style.transitionDelay =
+          `${cardIndex * 0.12}s`;
+
+      } else {
+
+        element.style.transitionDelay =
+          `${Math.min(index * 0.03, 0.18)}s`;
+
+      }
+
+    });
 
 
-  const revealObserver =
-    new IntersectionObserver(
-      function (entries, observer) {
+    const revealObserver =
+      new IntersectionObserver(
+        (entries, observer) => {
 
-        entries.forEach(function (entry) {
+          entries.forEach((entry) => {
 
-          if (!entry.isIntersecting) {
-            return;
-          }
+            if (!entry.isIntersecting) {
+              return;
+            }
 
-          entry.target.style.opacity = "1";
+            entry.target.style.opacity =
+              "1";
 
-          entry.target.style.transform =
-            "translateY(0)";
+            entry.target.style.transform =
+              "translateY(0)";
 
-          observer.unobserve(entry.target);
+            observer.unobserve(
+              entry.target
+            );
 
-        });
+          });
+
+        },
+        {
+          threshold: 0.12,
+          rootMargin: "0px 0px -40px 0px"
+        }
+      );
+
+
+    revealElements.forEach((element) => {
+
+      revealObserver.observe(element);
+
+    });
+
+  }
+
+
+  /* =======================================================
+     IMAGE LOADING POLISH
+     ======================================================= */
+
+  const images =
+    document.querySelectorAll("img");
+
+  images.forEach((image) => {
+
+    image.addEventListener(
+      "load",
+      () => {
+
+        image.classList.add("loaded");
 
       },
-      {
-        threshold: 0.12
-      }
+      { once: true }
     );
-
-
-  revealElements.forEach(function (element) {
-
-    revealObserver.observe(element);
 
   });
 
 
-  /* ---------------------------------------------------------
+  /* =======================================================
      CONSOLE BRAND MESSAGE
-     --------------------------------------------------------- */
+     ======================================================= */
 
   console.log(
     "The Kashur Mushukh — A Fragrance from Kashmir."
