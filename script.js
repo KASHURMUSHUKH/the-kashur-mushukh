@@ -1,45 +1,21 @@
-/* =========================================================
-   THE KASHUR MUSHUKH
-   Website Functionality
-========================================================= */
-
 document.addEventListener("DOMContentLoaded", function () {
 
-  /* -------------------------------------------------------
+  /* =====================================================
      BUSINESS DETAILS
-  ------------------------------------------------------- */
+  ===================================================== */
 
   const WHATSAPP_NUMBER = "917889420904";
 
-  const PRODUCT_NAME =
-    "The Kashur Mushukh - 50 ML";
-
-  const PRODUCT_PRICE =
-    "1499";
+  const PRODUCT_NAME = "The Kashur Mushukh";
+  const PRODUCT_PRICE = "₹1,499";
 
 
-  /* -------------------------------------------------------
-     CURRENT YEAR
-  ------------------------------------------------------- */
-
-  const year =
-    document.getElementById("year");
-
-  if (year) {
-    year.textContent =
-      new Date().getFullYear();
-  }
-
-
-  /* -------------------------------------------------------
+  /* =====================================================
      MOBILE MENU
-  ------------------------------------------------------- */
+  ===================================================== */
 
-  const menuToggle =
-    document.querySelector(".menu-toggle");
-
-  const navigation =
-    document.querySelector(".navigation");
+  const menuToggle = document.querySelector(".menu-toggle");
+  const navigation = document.querySelector(".navigation");
 
   if (menuToggle && navigation) {
 
@@ -47,45 +23,43 @@ document.addEventListener("DOMContentLoaded", function () {
 
       navigation.classList.toggle("active");
 
-      const opened =
+      const isOpen =
         navigation.classList.contains("active");
 
       menuToggle.setAttribute(
+        "aria-expanded",
+        isOpen ? "true" : "false"
+      );
+
+      menuToggle.setAttribute(
         "aria-label",
-        opened
-          ? "Close navigation"
-          : "Open navigation"
+        isOpen ? "Close navigation" : "Open navigation"
       );
 
     });
 
 
-    navigation
-      .querySelectorAll("a")
-      .forEach(function (link) {
+    navigation.querySelectorAll("a").forEach(function (link) {
 
-        link.addEventListener(
-          "click",
-          function () {
+      link.addEventListener("click", function () {
 
-            navigation.classList.remove("active");
+        navigation.classList.remove("active");
 
-            menuToggle.setAttribute(
-              "aria-label",
-              "Open navigation"
-            );
-
-          }
+        menuToggle.setAttribute(
+          "aria-expanded",
+          "false"
         );
 
       });
 
+    });
+
   }
 
 
-  /* -------------------------------------------------------
-     HEADER ON SCROLL
-  ------------------------------------------------------- */
+  /* =====================================================
+     HEADER SCROLL
+  ===================================================== */
 
   const header =
     document.querySelector(".site-header");
@@ -94,21 +68,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!header) return;
 
-    if (window.scrollY > 40) {
+    if (window.scrollY > 50) {
 
-      header.style.background =
-        "rgba(16,16,14,.94)";
-
-      header.style.backdropFilter =
-        "blur(14px)";
+      header.classList.add("scrolled");
 
     } else {
 
-      header.style.background =
-        "transparent";
-
-      header.style.backdropFilter =
-        "none";
+      header.classList.remove("scrolled");
 
     }
 
@@ -123,397 +89,214 @@ document.addEventListener("DOMContentLoaded", function () {
   updateHeader();
 
 
-  /* -------------------------------------------------------
-     ORDER MODAL
-  ------------------------------------------------------- */
+  /* =====================================================
+     PAYMENT METHOD
+  ===================================================== */
 
-  const modal =
-    document.getElementById("orderModal");
+  const paymentButtons =
+    document.querySelectorAll(".payment-option");
 
-  const buyButtons =
-    document.querySelectorAll(".buy-button");
+  const upiDetails =
+    document.getElementById("upi-details");
 
-  const closeButton =
-    document.querySelector(".modal-close");
+  const codDetails =
+    document.getElementById("cod-details");
 
-  const codButton =
-    document.getElementById("codButton");
+  let selectedPayment = "UPI";
 
-  const upiButton =
-    document.getElementById("upiButton");
+  paymentButtons.forEach(function (button) {
 
+    button.addEventListener("click", function () {
 
-  function openModal() {
+      paymentButtons.forEach(function (item) {
 
-    if (modal) {
-      modal.classList.add("active");
-    }
+        item.classList.remove("active");
 
-  }
+      });
 
+      button.classList.add("active");
 
-  function closeModal() {
+      selectedPayment =
+        button.dataset.payment === "cod"
+          ? "Cash on Delivery"
+          : "UPI";
 
-    if (modal) {
-      modal.classList.remove("active");
-    }
+      if (selectedPayment === "UPI") {
 
-  }
+        upiDetails.style.display = "block";
+        codDetails.style.display = "none";
 
+      } else {
 
-  buyButtons.forEach(function (button) {
+        upiDetails.style.display = "none";
+        codDetails.style.display = "block";
 
-    button.addEventListener(
-      "click",
-      openModal
-    );
+      }
+
+    });
 
   });
 
 
-  if (closeButton) {
-
-    closeButton.addEventListener(
-      "click",
-      closeModal
-    );
-
-  }
-
-
-  if (modal) {
-
-    modal.addEventListener(
-      "click",
-      function (event) {
-
-        if (event.target === modal) {
-          closeModal();
-        }
-
-      }
-    );
-
-  }
-
-
-  /* -------------------------------------------------------
-     MODAL → ORDER FORM
-  ------------------------------------------------------- */
-
-  function goToOrder(paymentMethod) {
-
-    closeModal();
-
-    const orderSection =
-      document.getElementById("order");
-
-    if (orderSection) {
-
-      orderSection.scrollIntoView({
-        behavior: "smooth"
-      });
-
-    }
-
-    const paymentRadio =
-      document.querySelector(
-        'input[name="payment"][value="' +
-        paymentMethod +
-        '"]'
-      );
-
-    if (paymentRadio) {
-
-      setTimeout(function () {
-
-        paymentRadio.checked = true;
-
-      }, 500);
-
-    }
-
-  }
-
-
-  if (codButton) {
-
-    codButton.addEventListener(
-      "click",
-      function () {
-
-        goToOrder("COD");
-
-      }
-    );
-
-  }
-
-
-  if (upiButton) {
-
-    upiButton.addEventListener(
-      "click",
-      function () {
-
-        goToOrder("UPI");
-
-      }
-    );
-
-  }
-
-
-  /* -------------------------------------------------------
-     ORDER FORM
-  ------------------------------------------------------- */
-
-  const orderForm =
-    document.getElementById("orderForm");
-
-
-  if (orderForm) {
-
-    orderForm.addEventListener(
-      "submit",
-      function (event) {
-
-        event.preventDefault();
-
-
-        const name =
-          document
-            .getElementById("customerName")
-            .value
-            .trim();
-
-
-        const phone =
-          document
-            .getElementById("customerPhone")
-            .value
-            .trim();
-
-
-        const address =
-          document
-            .getElementById("customerAddress")
-            .value
-            .trim();
-
-
-        const city =
-          document
-            .getElementById("customerCity")
-            .value
-            .trim();
-
-
-        const pincode =
-          document
-            .getElementById("customerPincode")
-            .value
-            .trim();
-
-
-        const payment =
-          document
-            .querySelector(
-              'input[name="payment"]:checked'
-            )
-            .value;
-
-
-        if (!name ||
-            !phone ||
-            !address ||
-            !city ||
-            !pincode) {
-
-          alert(
-            "Please fill all the required details."
-          );
-
-          return;
-
-        }
-
-
-        const message =
-`Hello, I want to place an order for ${PRODUCT_NAME}.
-
-Name: ${name}
-Mobile: ${phone}
-
-Address:
-${address}
-${city} - ${pincode}
-
-Payment Method: ${payment}
-
-Product: ${PRODUCT_NAME}
-Price: ₹${PRODUCT_PRICE}
-
-Please confirm my order and share the next steps.`;
-
-
-        const whatsappURL =
-          "https://wa.me/" +
-          WHATSAPP_NUMBER +
-          "?text=" +
-          encodeURIComponent(message);
-
-
-        window.open(
-          whatsappURL,
-          "_blank",
-          "noopener,noreferrer"
-        );
-
-      }
-    );
-
-  }
-
-
-  /* -------------------------------------------------------
-     SMOOTH ANCHOR NAVIGATION
-  ------------------------------------------------------- */
-
-  document
-    .querySelectorAll('a[href^="#"]')
-    .forEach(function (link) {
-
-      link.addEventListener(
-        "click",
-        function (event) {
-
-          const id =
-            link.getAttribute("href");
-
-          if (!id || id === "#") {
-            return;
-          }
-
-          const target =
-            document.querySelector(id);
-
-          if (!target) {
-            return;
-          }
-
-          event.preventDefault();
-
-          target.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
-
-        }
+  /* =====================================================
+     WHATSAPP ORDER
+  ===================================================== */
+
+  const orderButtons =
+    document.querySelectorAll(".order-button");
+
+  orderButtons.forEach(function (button) {
+
+    button.addEventListener("click", function (event) {
+
+      event.preventDefault();
+
+      const message =
+        "Hello, I would like to order The Kashur Mushukh.\n\n" +
+        "Product: " + PRODUCT_NAME + "\n" +
+        "Size: 50 ML\n" +
+        "Price: " + PRODUCT_PRICE + "\n" +
+        "Payment: " + selectedPayment + "\n\n" +
+        "Please share the next steps for my order.";
+
+      const whatsappURL =
+        "https://wa.me/" +
+        WHATSAPP_NUMBER +
+        "?text=" +
+        encodeURIComponent(message);
+
+      window.open(
+        whatsappURL,
+        "_blank",
+        "noopener,noreferrer"
       );
 
     });
 
-
-  /* -------------------------------------------------------
-     REVEAL ANIMATION
-  ------------------------------------------------------- */
-
-  const revealElements =
-    document.querySelectorAll(
-      ".intro-grid, .story-grid, .note, .product-card, .why-card, .order-container, .delivery-grid, .faq-list, .contact-inner"
-    );
+  });
 
 
-  revealElements.forEach(function (element) {
+  /* =====================================================
+     SMOOTH SCROLL
+  ===================================================== */
 
-    element.style.opacity = "0";
+  document.querySelectorAll('a[href^="#"]').forEach(function (link) {
 
-    element.style.transform =
-      "translateY(25px)";
+    link.addEventListener("click", function (event) {
 
-    element.style.transition =
-      "opacity .8s ease, transform .8s ease";
+      const targetID =
+        link.getAttribute("href");
+
+      if (
+        !targetID ||
+        targetID === "#"
+      ) {
+        return;
+      }
+
+      const target =
+        document.querySelector(targetID);
+
+      if (!target) {
+        return;
+      }
+
+      event.preventDefault();
+
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+    });
 
   });
 
 
+  /* =====================================================
+     REVEAL ANIMATIONS
+  ===================================================== */
+
+  const revealElements =
+    document.querySelectorAll(
+      ".intro-grid > div, " +
+      ".story-content, " +
+      ".story-visual, " +
+      ".note-card, " +
+      ".product-card, " +
+      ".order-box, " +
+      ".order-intro, " +
+      ".service-card, " +
+      ".contact-container"
+    );
+
+
   if ("IntersectionObserver" in window) {
+
+    revealElements.forEach(function (element) {
+
+      element.style.opacity = "0";
+      element.style.transform =
+        "translateY(25px)";
+      element.style.transition =
+        "opacity .8s ease, transform .8s ease";
+
+    });
+
 
     const observer =
       new IntersectionObserver(
         function (entries, observer) {
 
-          entries.forEach(
-            function (entry) {
+          entries.forEach(function (entry) {
 
-              if (!entry.isIntersecting) {
-                return;
-              }
-
-              entry.target.style.opacity =
-                "1";
-
-              entry.target.style.transform =
-                "translateY(0)";
-
-              observer.unobserve(
-                entry.target
-              );
-
+            if (!entry.isIntersecting) {
+              return;
             }
-          );
+
+            entry.target.style.opacity = "1";
+
+            entry.target.style.transform =
+              "translateY(0)";
+
+            observer.unobserve(entry.target);
+
+          });
 
         },
         {
-          threshold: 0.08
+          threshold: 0.12
         }
       );
 
 
-    revealElements.forEach(
-      function (element) {
+    revealElements.forEach(function (element) {
 
-        observer.observe(element);
+      observer.observe(element);
 
-      }
-    );
-
-  } else {
-
-    revealElements.forEach(
-      function (element) {
-
-        element.style.opacity = "1";
-
-        element.style.transform =
-          "translateY(0)";
-
-      }
-    );
+    });
 
   }
 
 
-  /* -------------------------------------------------------
-     ESCAPE KEY CLOSES MODAL
-  ------------------------------------------------------- */
+  /* =====================================================
+     YEAR
+  ===================================================== */
 
-  document.addEventListener(
-    "keydown",
-    function (event) {
+  const year =
+    document.getElementById("year");
 
-      if (event.key === "Escape") {
-        closeModal();
-      }
+  if (year) {
 
-    }
-  );
+    year.textContent =
+      new Date().getFullYear();
+
+  }
 
 
-  /* -------------------------------------------------------
-     BRAND CONSOLE
-  ------------------------------------------------------- */
+  /* =====================================================
+     BRAND MESSAGE
+  ===================================================== */
 
   console.log(
     "The Kashur Mushukh — A Fragrance from Kashmir."
