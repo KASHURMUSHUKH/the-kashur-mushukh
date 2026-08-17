@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
      Replace the UPI_ID above with your real UPI ID.
 
      Example:
-     const UPI_ID = "kashurmushukh@oksbi";
+     const UPI_ID = "7889420904@hdfc";
   */
 
 
