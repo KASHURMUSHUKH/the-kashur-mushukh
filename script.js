@@ -1,116 +1,79 @@
 /* =========================================================
    THE KASHUR MUSHUKH
-   E-COMMERCE WEBSITE JAVASCRIPT
+   Complete Website & Order Management
    ========================================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
 
-  /* =========================================================
+  /* =====================================================
      BUSINESS DETAILS
-     ========================================================= */
+  ===================================================== */
 
-  const WHATSAPP_NUMBER = "917889420904";
-
-  const UPI_ID = "yourupi@upi";
-
-  /*
-     IMPORTANT:
-     Replace the UPI_ID above with your real UPI ID.
-
-     Example:
-     const UPI_ID = "7889420904@hdfc";
-  */
-
-
-  /* =========================================================
-     PRODUCT CATALOGUE
-     ========================================================= */
-
-  const PRODUCTS = {
-
-    mushukh: {
-      id: "mushukh",
-      name: "The Kashur Mushukh",
-      size: "50 ML",
-      price: 1449,
-      category: "Signature Fragrance",
-      description:
-        "Our signature Kashmir-inspired fragrance — elegant, warm and unforgettable."
-    },
-
-    oud: {
-      id: "oud",
-      name: "Kashur Oud",
-      size: "50 ML",
-      price: 1649,
-      category: "Luxury Collection",
-      description:
-        "A rich and sophisticated oud fragrance inspired by the timeless character of Kashmir."
-    },
-
-    musk: {
-      id: "musk",
-      name: "Kashur Musk",
-      size: "50 ML",
-      price: 1349,
-      category: "Signature Collection",
-      description:
-        "Soft, warm and sensual musk with a refined Kashmir-inspired character."
-    },
-
-    rose: {
-      id: "rose",
-      name: "Kashur Rose",
-      size: "50 ML",
-      price: 1299,
-      category: "Floral Collection",
-      description:
-        "A graceful floral fragrance inspired by the roses and gardens of Kashmir."
-    },
-
-    attar: {
-      id: "attar",
-      name: "Kashur Attar",
-      size: "12 ML",
-      price: 899,
-      category: "Traditional Collection",
-      description:
-        "A concentrated traditional fragrance inspired by the heritage of Kashmir."
-    },
-
-    discovery: {
-      id: "discovery",
-      name: "Kashur Discovery Set",
-      size: "5 × 5 ML",
-      price: 1199,
-      category: "Discovery Collection",
-      description:
-        "Discover a selection of Kashur Mushukh fragrances in one elegant set."
-    },
-
-    gift: {
-      id: "gift",
-      name: "Kashur Luxury Gift Set",
-      size: "Gift Set",
-      price: 2299,
-      category: "Gift Collection",
-      description:
-        "A beautifully presented fragrance experience created for gifting."
-    }
-
+  const BUSINESS = {
+    name: "The Kashur Mushukh",
+    address: "Kangan, Ganderbal, Jammu & Kashmir",
+    pincode: "191202",
+    phone: "9596208713",
+    whatsapp: "917889420904",
+    email: "kashurmushukh@gmail.com"
   };
 
 
-  /* =========================================================
-     CART
-     ========================================================= */
+  /* =====================================================
+     PRODUCT DETAILS
+  ===================================================== */
 
-  let cart = [];
+  const PRODUCTS = {
+    "kashur-mushukh": {
+      name: "The Kashur Mushukh",
+      size: "50 ML",
+      price: 1499
+    },
+
+    "mushukh-noir": {
+      name: "Mushukh Noir",
+      size: "50 ML",
+      price: 1699
+    },
+
+    "mushukh-royal": {
+      name: "Mushukh Royal",
+      size: "50 ML",
+      price: 1799
+    },
+
+    "kashmir-mist": {
+      name: "Kashmir Mist",
+      size: "50 ML",
+      price: 1399
+    },
+
+    "gulab-mushukh": {
+      name: "Gulab Mushukh",
+      size: "50 ML",
+      price: 1449
+    },
+
+    "oud-kashmir": {
+      name: "Oud Kashmir",
+      size: "50 ML",
+      price: 1899
+    }
+  };
 
 
-  /* =========================================================
-     DOM ELEMENTS
-     ========================================================= */
+  /* =====================================================
+     CURRENT ORDER
+  ===================================================== */
+
+  let selectedPayment = "UPI";
+
+  let currentProduct = PRODUCTS["kashur-mushukh"];
+
+
+  /* =====================================================
+     MOBILE MENU
+  ===================================================== */
 
   const menuToggle =
     document.querySelector(".menu-toggle");
@@ -118,97 +81,73 @@ document.addEventListener("DOMContentLoaded", function () {
   const navigation =
     document.querySelector(".navigation");
 
-  const cartButtons =
-    document.querySelectorAll(".add-to-cart");
-
-  const orderButtons =
-    document.querySelectorAll(".order-button");
-
-  const paymentButtons =
-    document.querySelectorAll(".payment-option");
-
-  const cartContainer =
-    document.querySelector(".cart-items");
-
-  const cartCount =
-    document.querySelector(".cart-count");
-
-  const cartTotal =
-    document.querySelector(".cart-total");
-
-  const cartSubtotal =
-    document.querySelector(".cart-subtotal");
-
-  const upiDetails =
-    document.getElementById("upi-details");
-
-  const codDetails =
-    document.getElementById("cod-details");
-
-  const checkoutForm =
-    document.querySelector(".checkout-form");
-
-  const header =
-    document.querySelector(".site-header");
-
-  let selectedPayment = "UPI";
-
-
-  /* =========================================================
-     MOBILE NAVIGATION
-     ========================================================= */
 
   if (menuToggle && navigation) {
 
-    menuToggle.addEventListener("click", function () {
+    menuToggle.addEventListener(
+      "click",
+      function () {
 
-      navigation.classList.toggle("active");
+        navigation.classList.toggle("active");
 
-      const isOpen =
-        navigation.classList.contains("active");
-
-      menuToggle.setAttribute(
-        "aria-expanded",
-        isOpen ? "true" : "false"
-      );
-
-      menuToggle.setAttribute(
-        "aria-label",
-        isOpen
-          ? "Close navigation"
-          : "Open navigation"
-      );
-
-    });
-
-
-    navigation.querySelectorAll("a").forEach(function (link) {
-
-      link.addEventListener("click", function () {
-
-        navigation.classList.remove("active");
+        const isOpen =
+          navigation.classList.contains("active");
 
         menuToggle.setAttribute(
           "aria-expanded",
-          "false"
+          isOpen ? "true" : "false"
+        );
+
+        menuToggle.setAttribute(
+          "aria-label",
+          isOpen
+            ? "Close navigation"
+            : "Open navigation"
+        );
+
+      }
+    );
+
+
+    navigation
+      .querySelectorAll("a")
+      .forEach(function (link) {
+
+        link.addEventListener(
+          "click",
+          function () {
+
+            navigation.classList.remove(
+              "active"
+            );
+
+            menuToggle.setAttribute(
+              "aria-expanded",
+              "false"
+            );
+
+          }
         );
 
       });
 
-    });
-
   }
 
 
-  /* =========================================================
-     HEADER ON SCROLL
-     ========================================================= */
+  /* =====================================================
+     HEADER SCROLL EFFECT
+  ===================================================== */
+
+  const header =
+    document.querySelector(".site-header");
+
 
   function updateHeader() {
 
     if (!header) {
       return;
     }
+
 
     if (window.scrollY > 50) {
 
@@ -226,766 +165,650 @@ document.addEventListener("DOMContentLoaded", function () {
   window.addEventListener(
     "scroll",
     updateHeader,
-    { passive: true }
+    {
+      passive: true
+    }
   );
+
 
   updateHeader();
 
 
-  /* =========================================================
-     FORMAT CURRENCY
-     ========================================================= */
+  /* =====================================================
+     PAYMENT METHOD
+  ===================================================== */
 
-  function formatPrice(price) {
-
-    return "₹" +
-      price.toLocaleString("en-IN");
-
-  }
-
-
-  /* =========================================================
-     FIND PRODUCT
-     ========================================================= */
-
-  function findProduct(productId) {
-
-    return PRODUCTS[productId] || null;
-
-  }
-
-
-  /* =========================================================
-     ADD PRODUCT TO CART
-     ========================================================= */
-
-  function addToCart(productId) {
-
-    const product =
-      findProduct(productId);
-
-    if (!product) {
-      return;
-    }
-
-
-    const existingProduct =
-      cart.find(function (item) {
-
-        return item.id === productId;
-
-      });
-
-
-    if (existingProduct) {
-
-      existingProduct.quantity += 1;
-
-    } else {
-
-      cart.push({
-
-        id: product.id,
-        name: product.name,
-        size: product.size,
-        price: product.price,
-        quantity: 1
-
-      });
-
-    }
-
-
-    updateCart();
-
-    showCartMessage(
-      product.name + " added to cart."
+  const paymentButtons =
+    document.querySelectorAll(
+      ".payment-option"
     );
 
-  }
 
-
-  /* =========================================================
-     REMOVE FROM CART
-     ========================================================= */
-
-  function removeFromCart(productId) {
-
-    cart =
-      cart.filter(function (item) {
-
-        return item.id !== productId;
-
-      });
-
-    updateCart();
-
-  }
-
-
-  /* =========================================================
-     CHANGE QUANTITY
-     ========================================================= */
-
-  function changeQuantity(productId, change) {
-
-    const item =
-      cart.find(function (product) {
-
-        return product.id === productId;
-
-      });
-
-
-    if (!item) {
-      return;
-    }
-
-
-    item.quantity += change;
-
-
-    if (item.quantity <= 0) {
-
-      removeFromCart(productId);
-
-      return;
-
-    }
-
-
-    updateCart();
-
-  }
-
-
-  /* =========================================================
-     CALCULATE CART TOTAL
-     ========================================================= */
-
-  function calculateTotal() {
-
-    return cart.reduce(
-
-      function (total, item) {
-
-        return total +
-          (item.price * item.quantity);
-
-      },
-
-      0
-
+  const upiDetails =
+    document.getElementById(
+      "upi-details"
     );
 
-  }
 
-
-  /* =========================================================
-     CART COUNT
-     ========================================================= */
-
-  function calculateCartCount() {
-
-    return cart.reduce(
-
-      function (total, item) {
-
-        return total + item.quantity;
-
-      },
-
-      0
-
+  const codDetails =
+    document.getElementById(
+      "cod-details"
     );
 
-  }
+
+  paymentButtons.forEach(
+    function (button) {
+
+      button.addEventListener(
+        "click",
+        function () {
+
+          paymentButtons.forEach(
+            function (item) {
+
+              item.classList.remove(
+                "active"
+              );
+
+            }
+          );
 
 
-  /* =========================================================
-     UPDATE CART
-     ========================================================= */
-
-  function updateCart() {
-
-    const count =
-      calculateCartCount();
-
-    const total =
-      calculateTotal();
+          button.classList.add(
+            "active"
+          );
 
 
-    if (cartCount) {
+          if (
+            button.dataset.payment ===
+            "cod"
+          ) {
 
-      cartCount.textContent =
-        count;
-
-    }
-
-
-    if (cartTotal) {
-
-      cartTotal.textContent =
-        formatPrice(total);
-
-    }
+            selectedPayment =
+              "Cash on Delivery";
 
 
-    if (cartSubtotal) {
+            if (upiDetails) {
 
-      cartSubtotal.textContent =
-        formatPrice(total);
+              upiDetails.style.display =
+                "none";
 
-    }
-
-
-    if (!cartContainer) {
-      return;
-    }
+            }
 
 
-    if (cart.length === 0) {
+            if (codDetails) {
 
-      cartContainer.innerHTML =
+              codDetails.style.display =
+                "block";
 
-        '<p class="empty-cart">' +
-        'Your cart is empty.' +
-        '</p>';
+            }
 
-      return;
+          } else {
 
-    }
-
-
-    cartContainer.innerHTML = "";
+            selectedPayment =
+              "UPI";
 
 
-    cart.forEach(function (item) {
+            if (upiDetails) {
 
-      const cartItem =
-        document.createElement("div");
+              upiDetails.style.display =
+                "block";
 
-      cartItem.className =
-        "cart-item";
-
-
-      cartItem.innerHTML = `
-
-        <div class="cart-item-info">
-
-          <strong>
-            ${item.name}
-          </strong>
-
-          <span>
-            ${item.size}
-          </span>
-
-          <span>
-            ${formatPrice(item.price)}
-          </span>
-
-        </div>
+            }
 
 
-        <div class="cart-item-actions">
+            if (codDetails) {
 
-          <button
-            type="button"
-            class="quantity-minus"
-            data-id="${item.id}">
-            −
-          </button>
+              codDetails.style.display =
+                "none";
 
-          <span>
-            ${item.quantity}
-          </span>
+            }
 
-          <button
-            type="button"
-            class="quantity-plus"
-            data-id="${item.id}">
-            +
-          </button>
+          }
 
-          <button
-            type="button"
-            class="remove-cart-item"
-            data-id="${item.id}">
-            Remove
-          </button>
-
-        </div>
-
-      `;
-
-
-      cartContainer.appendChild(
-        cartItem
+        }
       );
 
-    });
+    }
+  );
 
 
-    attachCartEvents();
+  /* =====================================================
+     PRODUCT SELECTION
+  ===================================================== */
+
+  const productSelectors =
+    document.querySelectorAll(
+      "[data-product]"
+    );
+
+
+  productSelectors.forEach(
+    function (element) {
+
+      element.addEventListener(
+        "click",
+        function () {
+
+          const productID =
+            element.dataset.product;
+
+
+          if (
+            PRODUCTS[productID]
+          ) {
+
+            currentProduct =
+              PRODUCTS[productID];
+
+            updateProductInformation();
+
+          }
+
+        }
+      );
+
+    }
+  );
+
+
+  function updateProductInformation() {
+
+    const productNames =
+      document.querySelectorAll(
+        ".selected-product-name"
+      );
+
+
+    productNames.forEach(
+      function (element) {
+
+        element.textContent =
+          currentProduct.name;
+
+      }
+    );
+
+
+    const productPrices =
+      document.querySelectorAll(
+        ".selected-product-price"
+      );
+
+
+    productPrices.forEach(
+      function (element) {
+
+        element.textContent =
+          formatCurrency(
+            currentProduct.price
+          );
+
+      }
+    );
+
+
+    const productSizes =
+      document.querySelectorAll(
+        ".selected-product-size"
+      );
+
+
+    productSizes.forEach(
+      function (element) {
+
+        element.textContent =
+          currentProduct.size;
+
+      }
+    );
 
   }
 
 
-  /* =========================================================
-     CART BUTTON EVENTS
-     ========================================================= */
+  /* =====================================================
+     CURRENCY FORMAT
+  ===================================================== */
 
-  function attachCartEvents() {
+  function formatCurrency(amount) {
 
-    document
-      .querySelectorAll(".quantity-minus")
-      .forEach(function (button) {
-
-        button.addEventListener(
-          "click",
-          function () {
-
-            changeQuantity(
-              button.dataset.id,
-              -1
-            );
-
-          }
-        );
-
-      });
-
-
-    document
-      .querySelectorAll(".quantity-plus")
-      .forEach(function (button) {
-
-        button.addEventListener(
-          "click",
-          function () {
-
-            changeQuantity(
-              button.dataset.id,
-              1
-            );
-
-          }
-        );
-
-      });
-
-
-    document
-      .querySelectorAll(".remove-cart-item")
-      .forEach(function (button) {
-
-        button.addEventListener(
-          "click",
-          function () {
-
-            removeFromCart(
-              button.dataset.id
-            );
-
-          }
-        );
-
-      });
+    return "₹" +
+      Number(amount).toLocaleString(
+        "en-IN"
+      );
 
   }
 
 
-  /* =========================================================
-     ADD TO CART BUTTONS
-     ========================================================= */
+  /* =====================================================
+     CUSTOMER DETAILS
+  ===================================================== */
 
-  cartButtons.forEach(function (button) {
+  function getCustomerDetails() {
 
-    button.addEventListener(
-      "click",
-      function (event) {
+    const customerName =
+      document.getElementById(
+        "customer-name"
+      );
 
-        event.preventDefault();
 
-        const productId =
-          button.dataset.product;
+    const customerPhone =
+      document.getElementById(
+        "customer-phone"
+      );
 
-        if (productId) {
 
-          addToCart(productId);
+    const customerEmail =
+      document.getElementById(
+        "customer-email"
+      );
 
-        }
 
-      }
-    );
+    const customerAddress =
+      document.getElementById(
+        "customer-address"
+      );
 
-  });
 
+    const customerPincode =
+      document.getElementById(
+        "customer-pincode"
+      );
 
-  /* =========================================================
-     QUICK ORDER BUTTON
-     ========================================================= */
 
-  orderButtons.forEach(function (button) {
+    return {
 
-    button.addEventListener(
-      "click",
-      function (event) {
+      name:
+        customerName
+          ? customerName.value.trim()
+          : "",
 
-        event.preventDefault();
+      phone:
+        customerPhone
+          ? customerPhone.value.trim()
+          : "",
 
+      email:
+        customerEmail
+          ? customerEmail.value.trim()
+          : "",
 
-        const productId =
-          button.dataset.product;
+      address:
+        customerAddress
+          ? customerAddress.value.trim()
+          : "",
 
+      pincode:
+        customerPincode
+          ? customerPincode.value.trim()
+          : ""
 
-        if (productId) {
+    };
 
-          addToCart(productId);
+  }
 
-          const cartSection =
-            document.querySelector("#cart");
 
-          if (cartSection) {
+  /* =====================================================
+     VALIDATE CUSTOMER DETAILS
+  ===================================================== */
 
-            cartSection.scrollIntoView({
-              behavior: "smooth"
-            });
+  function validateCustomer() {
 
-          }
+    const customer =
+      getCustomerDetails();
 
-          return;
 
-        }
+    if (!customer.name) {
 
+      alert(
+        "Please enter the customer's name."
+      );
 
-        if (cart.length === 0) {
-
-          addToCart("mushukh");
-
-        }
-
-
-        const cartSection =
-          document.querySelector("#cart");
-
-        if (cartSection) {
-
-          cartSection.scrollIntoView({
-            behavior: "smooth"
-          });
-
-        }
-
-      }
-    );
-
-  });
-
-
-  /* =========================================================
-     PAYMENT METHOD
-     ========================================================= */
-
-  paymentButtons.forEach(function (button) {
-
-    button.addEventListener(
-      "click",
-      function () {
-
-        paymentButtons.forEach(
-          function (item) {
-
-            item.classList.remove(
-              "active"
-            );
-
-          }
-        );
-
-
-        button.classList.add(
-          "active"
-        );
-
-
-        selectedPayment =
-          button.dataset.payment === "cod"
-            ? "Cash on Delivery"
-            : "UPI";
-
-
-        if (upiDetails) {
-
-          upiDetails.style.display =
-            selectedPayment === "UPI"
-              ? "block"
-              : "none";
-
-        }
-
-
-        if (codDetails) {
-
-          codDetails.style.display =
-            selectedPayment ===
-              "Cash on Delivery"
-              ? "block"
-              : "none";
-
-        }
-
-      }
-    );
-
-  });
-
-
-  /* =========================================================
-     GENERATE ORDER SUMMARY
-     ========================================================= */
-
-  function generateOrderSummary(
-    customerName,
-    phone,
-    address,
-    city,
-    pincode
-  ) {
-
-    let message =
-      "Hello, I would like to place an order with The Kashur Mushukh.\n\n";
-
-
-    message +=
-      "ORDER DETAILS\n";
-
-    message +=
-      "------------------------\n";
-
-
-    cart.forEach(function (item) {
-
-      message +=
-        item.name +
-        " (" +
-        item.size +
-        ")\n";
-
-      message +=
-        "Quantity: " +
-        item.quantity +
-        "\n";
-
-      message +=
-        "Price: " +
-        formatPrice(
-          item.price *
-          item.quantity
-        ) +
-        "\n\n";
-
-    });
-
-
-    message +=
-      "TOTAL: " +
-      formatPrice(
-        calculateTotal()
-      ) +
-      "\n\n";
-
-
-    message +=
-      "CUSTOMER DETAILS\n";
-
-    message +=
-      "------------------------\n";
-
-    message +=
-      "Name: " +
-      customerName +
-      "\n";
-
-    message +=
-      "Phone: " +
-      phone +
-      "\n";
-
-    message +=
-      "Address: " +
-      address +
-      "\n";
-
-    message +=
-      "City: " +
-      city +
-      "\n";
-
-    message +=
-      "PIN Code: " +
-      pincode +
-      "\n\n";
-
-
-    message +=
-      "PAYMENT METHOD: " +
-      selectedPayment +
-      "\n";
-
-
-    if (selectedPayment === "UPI") {
-
-      message +=
-        "UPI ID: " +
-        UPI_ID +
-        "\n";
+      return false;
 
     }
 
 
-    message +=
-      "\nPlease confirm my order and share the next steps.";
+    if (!customer.phone) {
 
-    return message;
+      alert(
+        "Please enter the customer's phone number."
+      );
+
+      return false;
+
+    }
+
+
+    if (!customer.address) {
+
+      alert(
+        "Please enter the delivery address."
+      );
+
+      return false;
+
+    }
+
+
+    if (!customer.pincode) {
+
+      alert(
+        "Please enter the PIN code."
+      );
+
+      return false;
+
+    }
+
+
+    return true;
 
   }
 
 
-  /* =========================================================
-     CHECKOUT FORM
-     ========================================================= */
+  /* =====================================================
+     QUANTITY
+  ===================================================== */
 
-  if (checkoutForm) {
-
-    checkoutForm.addEventListener(
-      "submit",
-      function (event) {
-
-        event.preventDefault();
+  const quantityInput =
+    document.getElementById(
+      "quantity"
+    );
 
 
-        if (cart.length === 0) {
+  function getQuantity() {
 
-          alert(
-            "Your cart is empty. Please add a product first."
-          );
-
-          return;
-
-        }
+    if (!quantityInput) {
+      return 1;
+    }
 
 
-        const customerName =
-          document.querySelector(
-            "#customer-name"
-          )?.value.trim();
+    let quantity =
+      parseInt(
+        quantityInput.value,
+        10
+      );
 
 
-        const phone =
-          document.querySelector(
-            "#customer-phone"
-          )?.value.trim();
+    if (
+      isNaN(quantity) ||
+      quantity < 1
+    ) {
+
+      quantity = 1;
+
+    }
 
 
-        const address =
-          document.querySelector(
-            "#customer-address"
-          )?.value.trim();
+    return quantity;
+
+  }
 
 
-        const city =
-          document.querySelector(
-            "#customer-city"
-          )?.value.trim();
+  /* =====================================================
+     CALCULATE ORDER
+  ===================================================== */
+
+  function calculateOrder() {
+
+    const quantity =
+      getQuantity();
 
 
-        const pincode =
-          document.querySelector(
-            "#customer-pincode"
-          )?.value.trim();
+    const subtotal =
+      currentProduct.price *
+      quantity;
 
 
-        if (
-          !customerName ||
-          !phone ||
-          !address ||
-          !city ||
-          !pincode
-        ) {
-
-          alert(
-            "Please fill in all delivery details."
-          );
-
-          return;
-
-        }
+    const shipping =
+      subtotal >= 1999
+        ? 0
+        : 99;
 
 
-        if (
-          phone.length < 10
-        ) {
-
-          alert(
-            "Please enter a valid phone number."
-          );
-
-          return;
-
-        }
+    const total =
+      subtotal +
+      shipping;
 
 
-        if (
-          pincode.length !== 6
-        ) {
+    return {
 
-          alert(
-            "Please enter a valid 6-digit PIN code."
-          );
+      quantity,
+      subtotal,
+      shipping,
+      total
 
-          return;
+    };
 
-        }
-
-
-        const message =
-          generateOrderSummary(
-            customerName,
-            phone,
-            address,
-            city,
-            pincode
-          );
+  }
 
 
-        const whatsappURL =
-          "https://wa.me/" +
-          WHATSAPP_NUMBER +
-          "?text=" +
-          encodeURIComponent(message);
+  /* =====================================================
+     UPDATE ORDER SUMMARY
+  ===================================================== */
+
+  function updateOrderSummary() {
+
+    const order =
+      calculateOrder();
 
 
-        window.open(
-          whatsappURL,
-          "_blank",
-          "noopener,noreferrer"
+    const subtotalElement =
+      document.getElementById(
+        "order-subtotal"
+      );
+
+
+    const shippingElement =
+      document.getElementById(
+        "order-shipping"
+      );
+
+
+    const totalElement =
+      document.getElementById(
+        "order-total"
+      );
+
+
+    if (subtotalElement) {
+
+      subtotalElement.textContent =
+        formatCurrency(
+          order.subtotal
         );
 
-      }
+    }
+
+
+    if (shippingElement) {
+
+      shippingElement.textContent =
+        order.shipping === 0
+          ? "FREE"
+          : formatCurrency(
+              order.shipping
+            );
+
+    }
+
+
+    if (totalElement) {
+
+      totalElement.textContent =
+        formatCurrency(
+          order.total
+        );
+
+    }
+
+  }
+
+
+  if (quantityInput) {
+
+    quantityInput.addEventListener(
+      "input",
+      updateOrderSummary
     );
 
   }
 
 
-  /* =========================================================
-     BUY NOW BUTTONS
-     ========================================================= */
+  updateProductInformation();
 
-  document
-    .querySelectorAll(".buy-now")
-    .forEach(function (button) {
+  updateOrderSummary();
+
+
+  /* =====================================================
+     GENERATE INVOICE NUMBER
+  ===================================================== */
+
+  function generateInvoiceNumber() {
+
+    const date =
+      new Date();
+
+
+    const year =
+      date.getFullYear();
+
+
+    const month =
+      String(
+        date.getMonth() + 1
+      ).padStart(2, "0");
+
+
+    const day =
+      String(
+        date.getDate()
+      ).padStart(2, "0");
+
+
+    const random =
+      Math.floor(
+        1000 +
+        Math.random() * 9000
+      );
+
+
+    return (
+      "KM-" +
+      year +
+      month +
+      day +
+      "-" +
+      random
+    );
+
+  }
+
+
+  /* =====================================================
+     SAVE BILL RECORD
+  ===================================================== */
+
+  function saveBillRecord(invoice) {
+
+    let records =
+      JSON.parse(
+        localStorage.getItem(
+          "kashurMushukhBills"
+        )
+      ) || [];
+
+
+    records.push(invoice);
+
+
+    localStorage.setItem(
+      "kashurMushukhBills",
+      JSON.stringify(records)
+    );
+
+  }
+
+
+  /* =====================================================
+     CREATE BILL OBJECT
+  ===================================================== */
+
+  function createBill() {
+
+    const customer =
+      getCustomerDetails();
+
+
+    const order =
+      calculateOrder();
+
+
+    return {
+
+      invoiceNumber:
+        generateInvoiceNumber(),
+
+      date:
+        new Date().toLocaleDateString(
+          "en-IN"
+        ),
+
+      time:
+        new Date().toLocaleTimeString(
+          "en-IN"
+        ),
+
+      business: BUSINESS,
+
+      customer: customer,
+
+      product: {
+
+        name:
+          currentProduct.name,
+
+        size:
+          currentProduct.size,
+
+        quantity:
+          order.quantity,
+
+        price:
+          currentProduct.price
+
+      },
+
+      subtotal:
+        order.subtotal,
+
+      shipping:
+        order.shipping,
+
+      total:
+        order.total,
+
+      payment:
+        selectedPayment
+
+    };
+
+  }
+
+
+  /* =====================================================
+     WHATSAPP ORDER
+  ===================================================== */
+
+  const orderButtons =
+    document.querySelectorAll(
+      ".order-button"
+    );
+
+
+  orderButtons.forEach(
+    function (button) {
 
       button.addEventListener(
         "click",
@@ -994,64 +817,8 @@ document.addEventListener("DOMContentLoaded", function () {
           event.preventDefault();
 
 
-          const productId =
-            button.dataset.product;
-
-
-          if (!productId) {
-            return;
-          }
-
-
-          cart = [];
-
-
-          addToCart(productId);
-
-
-          const checkout =
-            document.querySelector(
-              "#checkout"
-            );
-
-
-          if (checkout) {
-
-            checkout.scrollIntoView({
-              behavior: "smooth"
-            });
-
-          }
-
-        }
-      );
-
-    });
-
-
-  /* =========================================================
-     SMOOTH SCROLL
-     ========================================================= */
-
-  document
-    .querySelectorAll(
-      'a[href^="#"]'
-    )
-    .forEach(function (link) {
-
-      link.addEventListener(
-        "click",
-        function (event) {
-
-          const targetID =
-            link.getAttribute(
-              "href"
-            );
-
-
           if (
-            !targetID ||
-            targetID === "#"
+            !validateCustomer()
           ) {
 
             return;
@@ -1059,105 +826,1302 @@ document.addEventListener("DOMContentLoaded", function () {
           }
 
 
-          const target =
-            document.querySelector(
-              targetID
+          const customer =
+            getCustomerDetails();
+
+
+          const order =
+            calculateOrder();
+
+
+          const message =
+
+            "Hello, I would like to place an order from The Kashur Mushukh.\n\n" +
+
+            "PRODUCT DETAILS\n" +
+            "Product: " +
+            currentProduct.name +
+            "\n" +
+
+            "Size: " +
+            currentProduct.size +
+            "\n" +
+
+            "Quantity: " +
+            order.quantity +
+            "\n" +
+
+            "Price: " +
+            formatCurrency(
+              currentProduct.price
+            ) +
+            "\n\n" +
+
+            "ORDER TOTAL\n" +
+            "Subtotal: " +
+            formatCurrency(
+              order.subtotal
+            ) +
+            "\n" +
+
+            "Shipping: " +
+            (
+              order.shipping === 0
+                ? "FREE"
+                : formatCurrency(
+                    order.shipping
+                  )
+            ) +
+            "\n" +
+
+            "Total: " +
+            formatCurrency(
+              order.total
+            ) +
+            "\n\n" +
+
+            "PAYMENT\n" +
+            selectedPayment +
+            "\n\n" +
+
+            "CUSTOMER DETAILS\n" +
+            "Name: " +
+            customer.name +
+            "\n" +
+
+            "Phone: " +
+            customer.phone +
+            "\n" +
+
+            "Email: " +
+            customer.email +
+            "\n" +
+
+            "Address: " +
+            customer.address +
+            "\n" +
+
+            "PIN Code: " +
+            customer.pincode;
+
+
+          const whatsappURL =
+            "https://wa.me/" +
+            BUSINESS.whatsapp +
+            "?text=" +
+            encodeURIComponent(
+              message
             );
 
 
-          if (!target) {
-            return;
-          }
-
-
-          event.preventDefault();
-
-
-          target.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
+          window.open(
+            whatsappURL,
+            "_blank",
+            "noopener,noreferrer"
+          );
 
         }
       );
 
-    });
+    }
+  );
 
 
-  /* =========================================================
-     CART MESSAGE
-     ========================================================= */
+  /* =====================================================
+     GENERATE CUSTOMER BILL
+  ===================================================== */
 
-  function showCartMessage(message) {
+  const billButtons =
+    document.querySelectorAll(
+      ".generate-bill, #generate-bill"
+    );
 
-    let notification =
-      document.querySelector(
-        ".cart-notification"
+
+  billButtons.forEach(
+    function (button) {
+
+      button.addEventListener(
+        "click",
+        function (event) {
+
+          event.preventDefault();
+
+
+          if (
+            !validateCustomer()
+          ) {
+
+            return;
+
+          }
+
+
+          const bill =
+            createBill();
+
+
+          saveBillRecord(
+            bill
+          );
+
+
+          localStorage.setItem(
+            "lastKashurMushukhBill",
+            JSON.stringify(bill)
+          );
+
+
+          openBillWindow(
+            bill
+          );
+
+        }
+      );
+
+    }
+  );
+
+
+  /* =====================================================
+     OPEN BILL WINDOW
+  ===================================================== */
+
+  function openBillWindow(
+    bill
+  ) {
+
+    const billWindow =
+      window.open(
+        "",
+        "_blank"
       );
 
 
-    if (!notification) {
+    if (!billWindow) {
 
-      notification =
-        document.createElement(
-          "div"
-        );
-
-      notification.className =
-        "cart-notification";
-
-
-      document.body.appendChild(
-        notification
+      alert(
+        "Please allow pop-ups in your browser to generate the bill."
       );
+
+      return;
 
     }
 
 
-    notification.textContent =
-      message;
+    const customer =
+      bill.customer;
 
 
-    notification.classList.add(
-      "show"
+    const product =
+      bill.product;
+
+
+    billWindow.document.write(`
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+Invoice ${bill.invoiceNumber}
+-
+The Kashur Mushukh
+</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+
+  margin: 0;
+
+  padding: 30px;
+
+  background: #f3f1ec;
+
+  color: #171614;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+}
+
+.invoice {
+
+  max-width: 850px;
+
+  margin: auto;
+
+  background: white;
+
+  padding: 45px;
+
+  box-shadow:
+    0 10px 35px
+    rgba(0,0,0,.08);
+
+}
+
+.header {
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  gap: 30px;
+
+  padding-bottom: 30px;
+
+  border-bottom:
+    2px solid #b99a63;
+
+}
+
+.brand h1 {
+
+  margin: 0;
+
+  color: #171614;
+
+  font-family:
+    Georgia,
+    serif;
+
+  font-size: 32px;
+
+  letter-spacing: 2px;
+
+}
+
+.brand p {
+
+  margin: 8px 0 0;
+
+  color: #777;
+
+  font-size: 12px;
+
+}
+
+.invoice-info {
+
+  text-align: right;
+
+  font-size: 12px;
+
+  line-height: 1.8;
+
+}
+
+.invoice-info strong {
+
+  color: #b99a63;
+
+}
+
+.address-section {
+
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 50px;
+
+  margin-top: 35px;
+
+}
+
+.address-box h3 {
+
+  margin: 0 0 10px;
+
+  color: #b99a63;
+
+  font-size: 11px;
+
+  letter-spacing: 2px;
+
+  text-transform:
+    uppercase;
+
+}
+
+.address-box p {
+
+  margin: 3px 0;
+
+  font-size: 13px;
+
+  line-height: 1.7;
+
+}
+
+table {
+
+  width: 100%;
+
+  margin-top: 40px;
+
+  border-collapse:
+    collapse;
+
+}
+
+th {
+
+  padding: 13px 10px;
+
+  background: #171614;
+
+  color: white;
+
+  font-size: 11px;
+
+  text-align: left;
+
+}
+
+td {
+
+  padding: 15px 10px;
+
+  border-bottom:
+    1px solid #ddd;
+
+  font-size: 13px;
+
+}
+
+.text-right {
+
+  text-align: right;
+
+}
+
+.summary {
+
+  width: 330px;
+
+  margin:
+    25px 0 0 auto;
+
+}
+
+.summary-row {
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  padding: 8px 0;
+
+  font-size: 13px;
+
+}
+
+.total {
+
+  margin-top: 8px;
+
+  padding-top: 15px;
+
+  border-top:
+    2px solid #b99a63;
+
+  font-size: 18px;
+
+  font-weight: bold;
+
+}
+
+.payment {
+
+  margin-top: 35px;
+
+  padding: 18px;
+
+  background: #f6f3ed;
+
+  font-size: 13px;
+
+}
+
+.footer {
+
+  margin-top: 50px;
+
+  padding-top: 20px;
+
+  border-top:
+    1px solid #ddd;
+
+  text-align: center;
+
+  color: #777;
+
+  font-size: 11px;
+
+  line-height: 1.8;
+
+}
+
+.print-button {
+
+  display: block;
+
+  margin:
+    25px auto 0;
+
+  padding:
+    12px 25px;
+
+  border: none;
+
+  background: #b99a63;
+
+  color: #171614;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+}
+
+@media print {
+
+  body {
+
+    padding: 0;
+
+    background: white;
+
+  }
+
+  .invoice {
+
+    max-width: none;
+
+    box-shadow: none;
+
+  }
+
+  .print-button {
+
+    display: none;
+
+  }
+
+}
+
+@media(max-width:600px) {
+
+  body {
+
+    padding: 10px;
+
+  }
+
+  .invoice {
+
+    padding: 25px;
+
+  }
+
+  .header {
+
+    flex-direction:
+      column;
+
+  }
+
+  .invoice-info {
+
+    text-align: left;
+
+  }
+
+  .address-section {
+
+    grid-template-columns:
+      1fr;
+
+    gap: 20px;
+
+  }
+
+  .summary {
+
+    width: 100%;
+
+  }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="invoice">
+
+  <div class="header">
+
+    <div class="brand">
+
+      <h1>
+        THE KASHUR MUSHUKH
+      </h1>
+
+      <p>
+        A Fragrance from Kashmir
+      </p>
+
+    </div>
+
+    <div class="invoice-info">
+
+      <div>
+        <strong>INVOICE</strong>
+      </div>
+
+      <div>
+        ${bill.invoiceNumber}
+      </div>
+
+      <div>
+        Date: ${bill.date}
+      </div>
+
+      <div>
+        Time: ${bill.time}
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="address-section">
+
+    <div class="address-box">
+
+      <h3>
+        Seller
+      </h3>
+
+      <p>
+        <strong>
+          ${bill.business.name}
+        </strong>
+      </p>
+
+      <p>
+        ${bill.business.address}
+      </p>
+
+      <p>
+        PIN:
+        ${bill.business.pincode}
+      </p>
+
+      <p>
+        Phone:
+        ${bill.business.phone}
+      </p>
+
+      <p>
+        Email:
+        ${bill.business.email}
+      </p>
+
+    </div>
+
+
+    <div class="address-box">
+
+      <h3>
+        Bill To
+      </h3>
+
+      <p>
+        <strong>
+          ${customer.name}
+        </strong>
+      </p>
+
+      <p>
+        ${customer.address}
+      </p>
+
+      <p>
+        PIN:
+        ${customer.pincode}
+      </p>
+
+      <p>
+        Phone:
+        ${customer.phone}
+      </p>
+
+      ${
+        customer.email
+          ? `<p>Email: ${customer.email}</p>`
+          : ""
+      }
+
+    </div>
+
+  </div>
+
+
+  <table>
+
+    <thead>
+
+      <tr>
+
+        <th>
+          Product
+        </th>
+
+        <th>
+          Size
+        </th>
+
+        <th>
+          Qty
+        </th>
+
+        <th class="text-right">
+          Price
+        </th>
+
+        <th class="text-right">
+          Amount
+        </th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      <tr>
+
+        <td>
+          ${product.name}
+        </td>
+
+        <td>
+          ${product.size}
+        </td>
+
+        <td>
+          ${product.quantity}
+        </td>
+
+        <td class="text-right">
+          ${formatCurrency(product.price)}
+        </td>
+
+        <td class="text-right">
+          ${formatCurrency(bill.subtotal)}
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+
+  <div class="summary">
+
+    <div class="summary-row">
+
+      <span>
+        Subtotal
+      </span>
+
+      <strong>
+        ${formatCurrency(bill.subtotal)}
+      </strong>
+
+    </div>
+
+
+    <div class="summary-row">
+
+      <span>
+        Shipping
+      </span>
+
+      <strong>
+        ${
+          bill.shipping === 0
+            ? "FREE"
+            : formatCurrency(
+                bill.shipping
+              )
+        }
+      </strong>
+
+    </div>
+
+
+    <div class="summary-row total">
+
+      <span>
+        Total
+      </span>
+
+      <strong>
+        ${formatCurrency(bill.total)}
+      </strong>
+
+    </div>
+
+  </div>
+
+
+  <div class="payment">
+
+    <strong>
+      Payment Method:
+    </strong>
+
+    ${bill.payment}
+
+  </div>
+
+
+  <div class="footer">
+
+    <strong>
+      Thank you for choosing
+      The Kashur Mushukh.
+    </strong>
+
+    <br>
+
+    A fragrance inspired by
+    the timeless soul of Kashmir.
+
+    <br><br>
+
+    ${bill.business.name}
+    ·
+    ${bill.business.phone}
+    ·
+    ${bill.business.email}
+
+  </div>
+
+
+  <button
+    class="print-button"
+    onclick="window.print()">
+
+    PRINT / SAVE BILL
+
+  </button>
+
+</div>
+
+</body>
+
+</html>
+
+    `);
+
+
+    billWindow.document.close();
+
+  }
+
+
+  /* =====================================================
+     VIEW SAVED BILL RECORDS
+  ===================================================== */
+
+  const recordsButton =
+    document.getElementById(
+      "view-bill-records"
     );
 
 
-    setTimeout(
+  if (recordsButton) {
+
+    recordsButton.addEventListener(
+      "click",
       function () {
 
-        notification.classList.remove(
-          "show"
-        );
+        showBillRecords();
 
-      },
-      2500
+      }
     );
 
   }
 
 
-  /* =========================================================
+  /* =====================================================
+     BILL RECORDS
+  ===================================================== */
+
+  function showBillRecords() {
+
+    const records =
+      JSON.parse(
+        localStorage.getItem(
+          "kashurMushukhBills"
+        )
+      ) || [];
+
+
+    if (
+      records.length === 0
+    ) {
+
+      alert(
+        "No bill records found on this device."
+      );
+
+      return;
+
+    }
+
+
+    const recordsWindow =
+      window.open(
+        "",
+        "_blank"
+      );
+
+
+    if (!recordsWindow) {
+
+      alert(
+        "Please allow pop-ups to view bill records."
+      );
+
+      return;
+
+    }
+
+
+    let rows = "";
+
+
+    records
+      .slice()
+      .reverse()
+      .forEach(
+        function (bill) {
+
+          rows += `
+
+          <tr>
+
+            <td>
+              ${bill.invoiceNumber}
+            </td>
+
+            <td>
+              ${bill.date}
+            </td>
+
+            <td>
+              ${bill.customer.name}
+            </td>
+
+            <td>
+              ${bill.product.name}
+            </td>
+
+            <td>
+              ${bill.payment}
+            </td>
+
+            <td>
+              ${formatCurrency(
+                bill.total
+              )}
+            </td>
+
+          </tr>
+
+          `;
+
+        }
+      );
+
+
+    recordsWindow.document.write(`
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>
+Bill Records -
+The Kashur Mushukh
+</title>
+
+<style>
+
+body {
+
+  margin: 0;
+
+  padding: 30px;
+
+  background: #f5f2eb;
+
+  font-family: Arial,
+    Helvetica,
+    sans-serif;
+
+  color: #171614;
+
+}
+
+.container {
+
+  max-width: 1200px;
+
+  margin: auto;
+
+  background: white;
+
+  padding: 35px;
+
+}
+
+h1 {
+
+  font-family: Georgia,
+    serif;
+
+  font-weight: normal;
+
+  letter-spacing: 2px;
+
+}
+
+.subtitle {
+
+  color: #777;
+
+  font-size: 13px;
+
+}
+
+table {
+
+  width: 100%;
+
+  margin-top: 30px;
+
+  border-collapse:
+    collapse;
+
+}
+
+th {
+
+  padding: 12px;
+
+  background: #171614;
+
+  color: white;
+
+  font-size: 11px;
+
+  text-align: left;
+
+}
+
+td {
+
+  padding: 12px;
+
+  border-bottom:
+    1px solid #ddd;
+
+  font-size: 12px;
+
+}
+
+button {
+
+  margin-top: 25px;
+
+  padding: 12px 20px;
+
+  border: none;
+
+  background: #b99a63;
+
+  cursor: pointer;
+
+}
+
+@media(max-width:700px) {
+
+  body {
+
+    padding: 10px;
+
+  }
+
+  .container {
+
+    padding: 15px;
+
+    overflow-x: auto;
+
+  }
+
+  table {
+
+    min-width: 800px;
+
+  }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>
+THE KASHUR MUSHUKH
+</h1>
+
+<p class="subtitle">
+Customer Bill Records
+</p>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Invoice
+</th>
+
+<th>
+Date
+</th>
+
+<th>
+Customer
+</th>
+
+<th>
+Product
+</th>
+
+<th>
+Payment
+</th>
+
+<th>
+Total
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${rows}
+
+</tbody>
+
+</table>
+
+
+<button
+onclick="window.print()">
+
+PRINT RECORDS
+
+</button>
+
+</div>
+
+</body>
+
+</html>
+
+    `);
+
+
+    recordsWindow.document.close();
+
+  }
+
+
+  /* =====================================================
+     DELETE ALL BILL RECORDS
+  ===================================================== */
+
+  const deleteRecordsButton =
+    document.getElementById(
+      "delete-bill-records"
+    );
+
+
+  if (deleteRecordsButton) {
+
+    deleteRecordsButton.addEventListener(
+      "click",
+      function () {
+
+        const confirmation =
+          confirm(
+            "Are you sure you want to delete all saved bill records from this browser?"
+          );
+
+
+        if (!confirmation) {
+          return;
+        }
+
+
+        localStorage.removeItem(
+          "kashurMushukhBills"
+        );
+
+
+        alert(
+          "All bill records have been deleted."
+        );
+
+      }
+    );
+
+  }
+
+
+  /* =====================================================
+     SMOOTH SCROLL
+  ===================================================== */
+
+  document
+    .querySelectorAll(
+      'a[href^="#"]'
+    )
+    .forEach(
+      function (link) {
+
+        link.addEventListener(
+          "click",
+          function (event) {
+
+            const targetID =
+              link.getAttribute(
+                "href"
+              );
+
+
+            if (
+              !targetID ||
+              targetID === "#"
+            ) {
+
+              return;
+
+            }
+
+
+            const target =
+              document.querySelector(
+                targetID
+              );
+
+
+            if (!target) {
+              return;
+            }
+
+
+            event.preventDefault();
+
+
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start"
+            });
+
+          }
+        );
+
+      }
+    );
+
+
+  /* =====================================================
      REVEAL ANIMATIONS
-     ========================================================= */
+  ===================================================== */
 
   const revealElements =
     document.querySelectorAll(
+
       ".intro-grid > div, " +
+
       ".story-content, " +
+
       ".story-visual, " +
+
+      ".story-image, " +
+
       ".note-card, " +
+
       ".product-card, " +
-      ".product-item, " +
+
       ".order-box, " +
+
       ".order-intro, " +
+
       ".service-card, " +
+
       ".contact-container"
+
     );
 
 
   if (
-    "IntersectionObserver" in window
+    "IntersectionObserver"
+    in window
   ) {
 
     revealElements.forEach(
@@ -1178,6 +2142,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const observer =
       new IntersectionObserver(
+
         function (
           entries,
           observer
@@ -1211,9 +2176,11 @@ document.addEventListener("DOMContentLoaded", function () {
           );
 
         },
+
         {
           threshold: 0.12
         }
+
       );
 
 
@@ -1230,9 +2197,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
 
-  /* =========================================================
+  /* =====================================================
      CURRENT YEAR
-     ========================================================= */
+  ===================================================== */
 
   const year =
     document.getElementById(
@@ -1248,42 +2215,47 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
 
-  /* =========================================================
-     ESCAPE KEY
-     ========================================================= */
+  /* =====================================================
+     INITIAL PAYMENT STATE
+  ===================================================== */
 
-  document.addEventListener(
-    "keydown",
-    function (event) {
+  if (
+    paymentButtons.length > 0
+  ) {
 
-      if (
-        event.key === "Escape" &&
-        navigation
-      ) {
+    paymentButtons[0].classList.add(
+      "active"
+    );
 
-        navigation.classList.remove(
-          "active"
-        );
-
-      }
-
-    }
-  );
+  }
 
 
-  /* =========================================================
-     INITIAL CART
-     ========================================================= */
+  if (upiDetails) {
 
-  updateCart();
+    upiDetails.style.display =
+      "block";
+
+  }
 
 
-  /* =========================================================
-     BRAND MESSAGE
-     ========================================================= */
+  if (codDetails) {
+
+    codDetails.style.display =
+      "none";
+
+  }
+
+
+  /* =====================================================
+     BRAND CONSOLE MESSAGE
+  ===================================================== */
 
   console.log(
     "The Kashur Mushukh — A Fragrance from Kashmir."
+  );
+
+  console.log(
+    "Order system loaded successfully."
   );
 
 });
